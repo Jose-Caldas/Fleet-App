@@ -1,6 +1,14 @@
 import { View } from 'react-native'
-import { styles } from './styles'
+import { Container, Slogan, Title } from './styles'
+import backgroundImg from '../../assets/background.png'
+import { Button } from '../../components/Button'
 
 export function Signin() {
-  return <View style={styles.container}></View>
+  return (
+    <Container source={backgroundImg}>
+      <Title>Auto Fleet</Title>
+      <Slogan>Geatão de uso de veículos</Slogan>
+      <Button title="Entrar com Google" />
+    </Container>
+  )
 }
