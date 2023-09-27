@@ -7,7 +7,7 @@ export function Signin() {
   return (
     <Container source={backgroundImg}>
       <Title>Auto Fleet</Title>
-      <Slogan>Geatão de uso de veículos</Slogan>
+      <Slogan>Gestão de uso de veículos</Slogan>
       <Button title="Entrar com Google" />
     </Container>
   )
