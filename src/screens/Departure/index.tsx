@@ -18,6 +18,9 @@ import { Button } from '../../components/Button'
 import { LicensePlateInput } from '../../components/LicensePlateInput'
 import { TextAreaInput } from '../../components/TextAreaInput'
 import { licensePlateValidate } from '../../utils/licensePlateValidate'
+import { getAddressLocation } from '../../utils/getAddressLocation'
+import { Loading } from '../../components/Loading'
+import { LocationInfo } from '../../components/LocationInfo'
 
 import { Container, Content, Message } from './styles'
 
@@ -25,6 +28,8 @@ export function Departure() {
   const [description, setDescription] = useState('')
   const [licensePlate, setLicensePlate] = useState('')
   const [isRegistering, setIsRegistering] = useState(false)
+  const [isLoadingLocation, setIsLoadingLocation] = useState(true)
+  const [currentAddress, setCurrentAddress] = useState<string | null>(null)
 
   const [locationForegroundPermission, requestLocationForegroundPermission] =
     useForegroundPermissions()
@@ -91,11 +96,21 @@ export function Departure() {
         timeInterval: 1000,
       },
       (location) => {
-        console.log('localização', location)
+        getAddressLocation(location.coords).then((address) => {
+          if (address) {
+            setCurrentAddress(address)
+          }
+        })
       }
-    ).then((response) => (subscription = response))
+    )
+      .then((response) => (subscription = response))
+      .finally(() => setIsLoadingLocation(false))
 
-    return () => subscription?.remove()
+    return () => {
+      if (subscription) {
+        subscription.remove()
+      }
+    }
   }, [locationForegroundPermission])
 
   if (!locationForegroundPermission?.granted) {
@@ -111,12 +126,23 @@ export function Departure() {
     )
   }
 
+  if (isLoadingLocation) {
+    return <Loading />
+  }
+
   return (
     <Container>
       <Header title="Saída" />
       <KeyboardAwareScrollView extraHeight={200}>
         <ScrollView>
           <Content>
+            {currentAddress && (
+              <LocationInfo
+                label="Localização atual"
+                description={currentAddress}
+              />
+            )}
+
             <LicensePlateInput
               ref={licensePlateRef}
               label="Placa do veículo"
