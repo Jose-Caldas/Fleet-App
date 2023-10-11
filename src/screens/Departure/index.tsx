@@ -12,6 +12,7 @@ import {
 import { useRealm } from '../../libs/realm'
 import { Historic } from '../../libs/realm/schemas/Historic'
 import { useUser } from '@realm/react'
+import { Car } from 'phosphor-react-native'
 
 import { Header } from '../../components/Header'
 import { Button } from '../../components/Button'
@@ -140,6 +141,7 @@ export function Departure() {
               <LocationInfo
                 label="Localização atual"
                 description={currentAddress}
+                icon={Car}
               />
             )}
 
