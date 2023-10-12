@@ -7,7 +7,6 @@ export const Container = styled.View`
   padding: 0 32px 24px;
   flex-direction: row;
   justify-content: space-between;
-  z-index: 1;
 `
 
 export const Title = styled.Text`
