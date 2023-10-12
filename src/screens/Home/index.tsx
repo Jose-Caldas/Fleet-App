@@ -10,6 +10,7 @@ import { Historic } from '../../libs/realm/schemas/Historic'
 import { HomeHeader } from '../../components/HomeHeader'
 import { CarStatus } from '../../components/CarStatus'
 import { HistoricCard, HistoricCardProps } from '../../components/HistoricCard'
+import { useUser } from '@realm/react'
 
 import { Container, Content, Title, Label } from './styles'
 
@@ -19,6 +20,7 @@ export function Home() {
     []
   )
   const { navigate } = useNavigation()
+  const user = useUser()
 
   const realm = useRealm()
   const historic = useQuery(Historic)
@@ -87,6 +89,16 @@ export function Home() {
   useEffect(() => {
     fetchHistoric()
   }, [historic])
+
+  useEffect(() => {
+    realm.subscriptions.update((mutableSubs, realm) => {
+      const hitoricByUserQuery = realm
+        .objects('Historic')
+        .filtered(`user_id = '${user!.id}'`)
+
+      mutableSubs.add(hitoricByUserQuery, { name: 'historic_by_user' })
+    })
+  }, [realm])
 
   return (
     <Container>

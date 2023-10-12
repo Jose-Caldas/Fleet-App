@@ -9,7 +9,7 @@ import {
   Roboto_700Bold,
 } from '@expo-google-fonts/roboto'
 import { AppProvider, UserProvider } from '@realm/react'
-import { RealmProvider } from './src/libs/realm'
+import { RealmProvider, syncConfig } from './src/libs/realm'
 import { REALM_APP_ID } from '@env'
 
 import { Signin } from './src/screens/Signin'
@@ -36,7 +36,7 @@ export default function App() {
             translucent
           />
           <UserProvider fallback={Signin}>
-            <RealmProvider>
+            <RealmProvider sync={syncConfig} fallback={Loading}>
               <Routes />
             </RealmProvider>
           </UserProvider>
