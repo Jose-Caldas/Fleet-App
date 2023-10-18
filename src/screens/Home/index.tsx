@@ -4,6 +4,7 @@ import { Alert, FlatList } from 'react-native'
 import Toast from 'react-native-toast-message'
 import dayjs from 'dayjs'
 import Realm from 'realm'
+import { CloudArrowUp } from 'phosphor-react-native'
 
 import { useRealm } from '../../libs/realm'
 import { useQuery } from '../../libs/realm'
@@ -17,6 +18,7 @@ import { HomeHeader } from '../../components/HomeHeader'
 import { CarStatus } from '../../components/CarStatus'
 import { HistoricCard, HistoricCardProps } from '../../components/HistoricCard'
 import { useUser } from '@realm/react'
+import { TopMessage } from '../../components/TopMessage'
 
 import { Container, Content, Title, Label } from './styles'
 
@@ -25,6 +27,8 @@ export function Home() {
   const [vehicleHistoric, setVehicleHistoric] = useState<HistoricCardProps[]>(
     []
   )
+  const [percentageToSync, setPercentageToSync] = useState<string | null>(null)
+
   const { navigate } = useNavigation()
   const user = useUser()
 
@@ -90,12 +94,16 @@ export function Home() {
 
     if (percentage === 100) {
       await saveLastSyncTimestamp()
-      fetchHistoric()
+      await fetchHistoric()
+      setPercentageToSync(null)
 
       Toast.show({
         type: 'info',
         text1: 'Todos os dados estão sincronizados.',
       })
+    }
+    if (percentage < 100) {
+      setPercentageToSync(`${percentage.toFixed(0)}% sincronizado.`)
     }
   }
 
@@ -143,6 +151,9 @@ export function Home() {
 
   return (
     <Container>
+      {percentageToSync && (
+        <TopMessage title={percentageToSync} icon={CloudArrowUp} />
+      )}
       <HomeHeader />
 
       <Content>
