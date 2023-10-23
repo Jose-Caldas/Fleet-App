@@ -95,6 +95,7 @@ export function Departure() {
     }
 
     let subscription: LocationSubscription
+
     watchPositionAsync(
       {
         accuracy: LocationAccuracy.High,
@@ -102,15 +103,15 @@ export function Departure() {
       },
       (location) => {
         setCurrentCoords(location.coords)
-        getAddressLocation(location.coords).then((address) => {
-          if (address) {
-            setCurrentAddress(address)
-          }
-        })
+        getAddressLocation(location.coords)
+          .then((address) => {
+            if (address) {
+              setCurrentAddress(address)
+            }
+          })
+          .finally(() => setIsLoadingLocation(false))
       }
-    )
-      .then((response) => (subscription = response))
-      .finally(() => setIsLoadingLocation(false))
+    ).then((response) => (subscription = response))
 
     return () => {
       if (subscription) {
