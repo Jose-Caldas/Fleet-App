@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useNavigation } from '@react-navigation/native'
 import {
   useForegroundPermissions,
+  requestBackgroundPermissionsAsync,
   watchPositionAsync,
   LocationAccuracy,
   LocationSubscription,
@@ -46,7 +47,7 @@ export function Departure() {
   const descriptionRef = useRef<TextInput>(null)
   const licensePlateRef = useRef<TextInput>(null)
 
-  function handleDepartureRegister() {
+  async function handleDepartureRegister() {
     try {
       if (!licensePlateValidate(licensePlate)) {
         licensePlateRef.current?.focus()
@@ -63,7 +64,25 @@ export function Departure() {
           'Por favor, informe a finalidade da utilização do veículo.'
         )
       }
+
+      if (!currentCoords?.latitude && !currentCoords?.longitude) {
+        return Alert.alert(
+          'Localização!',
+          'Não foi possível obter a localização atual. Tente novamente!'
+        )
+      }
+
       setIsRegistering(true)
+
+      const backgroundPermissions = await requestBackgroundPermissionsAsync()
+
+      if (!backgroundPermissions.granted) {
+        setIsRegistering(false)
+        return Alert.alert(
+          'Localização',
+          'É necessário permitir que o App tenha acesso a localização em segundo plano. Acesse as configurações do dispositivo e habilite "Permitir o tempo todo".'
+        )
+      }
 
       realm.write(() => {
         realm.create(
@@ -142,17 +161,7 @@ export function Departure() {
       <Header title="Saída" />
       <KeyboardAwareScrollView extraHeight={200}>
         <ScrollView>
-          {currentCoords && (
-            <Map
-              coordinates={[
-                { latitude: -23.5694, longitude: -46.6447 },
-                { latitude: -23.5731, longitude: -46.6489 },
-                { latitude: -23.5719, longitude: -46.6524 },
-                { latitude: -23.5722, longitude: -46.6534 },
-                { latitude: -23.5715, longitude: -46.6529 },
-              ]}
-            />
-          )}
+          {currentCoords && <Map coordinates={[currentCoords]} />}
 
           <Content>
             {currentAddress && (
