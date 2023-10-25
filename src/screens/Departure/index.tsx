@@ -145,8 +145,11 @@ export function Departure() {
           {currentCoords && (
             <Map
               coordinates={[
-                { latitude: -23.5722, longitude: -46.6531 },
                 { latitude: -23.5694, longitude: -46.6447 },
+                { latitude: -23.5731, longitude: -46.6489 },
+                { latitude: -23.5719, longitude: -46.6524 },
+                { latitude: -23.5722, longitude: -46.6534 },
+                { latitude: -23.5715, longitude: -46.6529 },
               ]}
             />
           )}
