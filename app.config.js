@@ -24,7 +24,7 @@ module.exports = {
         googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
       },
       infoPlist: {
-        UiBackgroundsModes: ['location'],
+        UIBackgroundModes: ['location'],
       },
     },
     android: {
